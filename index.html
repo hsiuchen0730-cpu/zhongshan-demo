@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>中山女高融合教育支持平台｜口試展示版</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --panel-soft: #f8fbff;
+      --text: #1f2937;
+      --sub: #667085;
+      --line: #d8e0ea;
+      --primary: #1d4ed8;
+      --primary-2: #3b82f6;
+      --soft: #eaf2ff;
+      --ok: #0f766e;
+      --warn: #b45309;
+      --danger: #b91c1c;
+      --purple: #6d28d9;
+      --shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 24px; }
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb 45%, #60a5fa);
+      color: #fff;
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+    .hero-top { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap; }
+    .hero h1 { margin:0 0 10px; font-size: 32px; }
+    .hero p { margin:0; opacity:.95; max-width: 980px; }
+    .hero-note {
+      background: rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.2);
+      border-radius: 16px; padding: 10px 14px; min-width: 280px;
+    }
+    .layout { display:grid; grid-template-columns: 330px 1fr; gap: 18px; align-items:start; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .card h2 { margin:0 0 12px; font-size: 20px; }
+    .card h3 { margin:0 0 10px; font-size: 16px; }
+    .muted { color: var(--sub); }
+    .field { margin-bottom: 14px; }
+    label { display:block; font-weight:700; margin-bottom:6px; }
+    input, select, textarea {
+      width:100%; padding:11px 12px; font-size:15px; border-radius: 12px;
+      border:1px solid #cbd5e1; background:#fff;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    button {
+      border:0; background: var(--primary); color:#fff; border-radius:12px;
+      padding:11px 16px; font-size:15px; font-weight:700; cursor:pointer;
+    }
+    button.secondary { background:#fff; color:var(--primary); border:1px solid #bfd7ff; }
+    button.light { background: var(--soft); color: var(--primary); }
+    .row { display:flex; gap:10px; flex-wrap:wrap; }
+    .chips { display:flex; gap:8px; flex-wrap:wrap; }
+    .chip {
+      display:inline-flex; align-items:center; padding:5px 10px; border-radius:999px;
+      font-size:13px; font-weight:800; background:#eef2ff; color:#3730a3;
+    }
+    .chip.ok { background:#ecfeff; color:var(--ok); }
+    .chip.warn { background:#fff7ed; color:var(--warn); }
+    .chip.danger { background:#fef2f2; color:var(--danger); }
+    .chip.purple { background:#f3e8ff; color:var(--purple); }
+    .stats { display:grid; grid-template-columns: repeat(6, 1fr); gap:12px; margin-bottom:18px; }
+    .stat { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:14px; box-shadow:var(--shadow); }
+    .stat .n { font-size:28px; font-weight:900; margin-top:6px; }
+    .tabs { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+    .tab-btn {
+      padding:10px 14px; border-radius: 999px; border:1px solid #bfdbfe; background:#fff;
+      color:var(--primary); font-weight:800; cursor:pointer;
+    }
+    .tab-btn.active { background: var(--primary); color:#fff; border-color:var(--primary); }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+    .two-col { display:grid; grid-template-columns: 1.2fr .8fr; gap:18px; }
+    .three-col { display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
+    .classes { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:12px; }
+    .class-btn {
+      text-align:left; background:#fff; border:1px solid var(--line); border-radius:16px;
+      padding:14px; cursor:pointer;
+    }
+    .class-btn.active { background: var(--soft); border-color:#60a5fa; }
+    .section-title { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+    .student-list { display:grid; gap:12px; }
+    .student-item { border:1px solid var(--line); border-radius:16px; padding:16px; background:#fff; }
+    .student-item header { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:8px; }
+    .student-name { font-size:18px; font-weight:900; }
+    .student-meta { font-size:14px; color:var(--sub); }
+    .student-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; margin-top:12px; }
+    .student-grid.wide { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .mini-box {
+      background: #f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:12px; min-height:100%;
+    }
+    .mini-box h4 { margin:0 0 8px; font-size:14px; }
+    .iep-band {
+      margin-top: 14px; padding:12px; border-radius: 14px; background:#eff6ff; border:1px solid #bfdbfe;
+    }
+    .iep-band h4 { margin:0 0 10px; font-size:15px; color:var(--primary); }
+    .timeline { display:grid; gap:10px; }
+    .log {
+      padding:12px; border-left:4px solid #60a5fa; background:#f8fbff; border-radius:10px;
+    }
+    .banner { display:none; margin-top:12px; padding:10px 12px; border-radius:12px; background:#eff6ff; color:var(--primary); }
+    .table { width:100%; border-collapse: collapse; }
+    .table th, .table td { border-bottom:1px solid #e5e7eb; text-align:left; padding:10px 8px; vertical-align:top; }
+    .table th { color:#334155; font-size:14px; background:#f8fafc; }
+    .pill {
+      padding:4px 8px; border-radius:999px; font-size:12px; font-weight:800; display:inline-block;
+      background:#eff6ff; color:var(--primary);
+    }
+    .kpi-box {
+      background: linear-gradient(180deg, #ffffff, #f8fbff); border:1px solid var(--line); border-radius:16px; padding:14px;
+    }
+    .bar-row { margin-bottom:12px; }
+    .bar-row .label { display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px; }
+    .bar { height:10px; background:#e5eefc; border-radius:999px; overflow:hidden; }
+    .bar span { display:block; height:100%; background:linear-gradient(90deg, #3b82f6, #60a5fa); border-radius:999px; }
+    .footer-note { margin-top:18px; color:var(--sub); font-size:14px; }
+    ul { margin:0; padding-left:18px; }
+    .small { font-size:13px; }
+    @media (max-width: 1200px) {
+      .stats { grid-template-columns: repeat(3, 1fr); }
+      .classes { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .student-grid.wide, .three-col { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 980px) {
+      .layout, .two-col { grid-template-columns: 1fr; }
+      .stats, .classes, .student-grid, .student-grid.wide, .three-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <h1>中山女高融合教育支持平台｜口試展示版</h1>
+          <p>展示目的：讓任課教師、導師、特教教師與行政端，在同一平台中完成授權登入、班級查詢、IEP 摘要閱讀、定期評量調整提醒、提問回覆追蹤與行政統計判讀，形成可治理、可追蹤、可落地的普特合作系統。</p>
+        </div>
+        <div class="hero-note small">
+          <div><strong>展示定位：</strong>高擬真上線原型</div>
+          <div>資料已匿名化、去識別化</div>
+          <div>適合口試現場掃 QR code 展示概念</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="card">
+        <h2>登入與展示設定</h2>
+        <div class="field">
+          <label for="teacherName">登入者名稱</label>
+          <input id="teacherName" value="王老師" />
+        </div>
+        <div class="field">
+          <label for="teacherRole">帳號角色</label>
+          <select id="teacherRole">
+            <option>科任教師</option>
+            <option>導師</option>
+            <option>特教教師</option>
+            <option>特教組長</option>
+            <option>行政人員</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="todayClasses">今日授課／可存取班級</label>
+          <select id="todayClasses" multiple size="6">
+            <option selected>一年智班</option>
+            <option selected>一年樂班</option>
+            <option selected>一年群班</option>
+            <option selected>三年樂班</option>
+            <option>一年仁班</option>
+            <option>二年誠班</option>
+          </select>
+          <div class="muted small" style="margin-top:6px;">示範權限會依角色與班級載入不同資料層級。</div>
+        </div>
+        <div class="row">
+          <button onclick="renderAll()">載入展示版</button>
+          <button class="secondary" onclick="loadDemo()">重設示範資料</button>
+        </div>
+
+        <hr style="border:none; border-top:1px solid #e5e7eb; margin:18px 0;">
+
+        <h3>口試亮點</h3>
+        <ul class="muted small">
+          <li>帳號權限分級，不同身分看到不同資訊深度</li>
+          <li>學生資料保密分級，降低不必要揭露</li>
+          <li>IEP 摘要直接轉成教師可執行策略</li>
+          <li>定期評量前自動通知評量調整方式</li>
+          <li>提問、回覆、追蹤形成完整紀錄鏈</li>
+          <li>行政端可看趨勢，不必直接讀完整個案資料</li>
+        </ul>
+      </aside>
+
+      <main>
+        <div class="stats" id="stats"></div>
+        <div class="tabs" id="tabs"></div>
+
+        <section class="tab-panel active" id="tab-home">
+          <div class="two-col">
+            <div>
+              <section class="card" style="margin-bottom:18px;">
+                <div class="section-title">
+                  <h2 style="margin:0;">教師首頁</h2>
+                  <div class="chips" id="teacherSummary"></div>
+                </div>
+                <div class="classes" id="classButtons"></div>
+              </section>
+
+              <section class="card">
+                <div class="section-title">
+                  <h2 style="margin:0;" id="classTitle">班級學生資料</h2>
+                  <div class="chips" id="classInfo"></div>
+                </div>
+                <div id="studentList" class="student-list"></div>
+              </section>
+            </div>
+
+            <div>
+              <section class="card" style="margin-bottom:18px;">
+                <div class="section-title">
+                  <h2 style="margin:0;">IEP 摘要與本節提醒</h2>
+                  <span class="muted">將正式 IEP 轉成授課前可讀資訊</span>
+                </div>
+                <div id="iepQuickView"></div>
+              </section>
+
+              <section class="card">
+                <div class="section-title">
+                  <h2 style="margin:0;">定期評量前提醒</h2>
+                  <span class="pill">自動通知模擬</span>
+                </div>
+                <div id="examReminderPanel"></div>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="tab-permission">
+          <div class="two-col">
+            <section class="card">
+              <div class="section-title">
+                <h2 style="margin:0;">帳號權限矩陣</h2>
+                <span class="muted">不同角色看到不同層級資料</span>
+              </div>
+              <table class="table">
+                <thead>
+                  <tr><th>角色</th><th>可查看</th><th>不可查看或需申請</th><th>典型用途</th></tr>
+                </thead>
+                <tbody id="permissionMatrix"></tbody>
+              </table>
+            </section>
+            <section class="card">
+              <div class="section-title">
+                <h2 style="margin:0;">學生資料保密分級</h2>
+                <span class="muted">以最小必要揭露為原則</span>
+              </div>
+              <div class="timeline" id="privacyLevels"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="tab-notice">
+          <div class="two-col">
+            <section class="card">
+              <div class="section-title">
+                <h2 style="margin:0;">通知中心</h2>
+                <span class="muted">模擬自動推播、待處理與已讀通知</span>
+              </div>
+              <div class="timeline" id="notificationList"></div>
+            </section>
+            <section class="card">
+              <div class="section-title">
+                <h2 style="margin:0;">教師提問／回報</h2>
+                <span class="muted">普特合作與諮詢入口</span>
+              </div>
+              <div class="field">
+                <label for="questionClass">班級</label>
+                <select id="questionClass"></select>
+              </div>
+              <div class="field">
+                <label for="questionStudent">學生</label>
+                <select id="questionStudent"></select>
+              </div>
+              <div class="field">
+                <label for="questionType">問題類型</label>
+                <select id="questionType">
+                  <option>教學調整建議</option>
+                  <option>IEP課程調整執行</option>
+                  <option>情緒行為狀況</option>
+                  <option>作業 / 評量調整</option>
+                  <option>人際互動觀察</option>
+                  <option>行政協助需求</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="questionText">內容</label>
+                <textarea id="questionText" placeholder="例如：本週英文小考是否可依 IEP 進行少人試場與文字提示？學生在分組時對任務不清楚，建議如何調整？"></textarea>
+              </div>
+              <div class="row">
+                <button onclick="submitQuestion()">送出提問</button>
+                <button class="secondary" onclick="fillSampleQuestion()">自動填入範例</button>
+              </div>
+              <div id="submitBanner" class="banner">已送出：系統已同步記錄於回覆紀錄區，並通知特教教師與導師。</div>
+            </section>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="tab-logs">
+          <div class="two-col">
+            <section class="card">
+              <div class="section-title">
+                <h2 style="margin:0;">回覆紀錄</h2>
+                <span class="muted">教師提問、特教回覆、後續追蹤</span>
+              </div>
+              <div class="timeline" id="responseLogs"></div>
+            </section>
+            <section class="card">
+              <div class="section-title">
+                <h2 style="margin:0;">服務流程示意</h2>
+                <span class="muted">委員可直接理解系統價值鏈</span>
+              </div>
+              <div class="timeline" id="workflowSteps"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="tab-report">
+          <div class="three-col">
+            <section class="card">
+              <h2>行政統計報表</h2>
+              <div class="kpi-box" id="kpiSummary"></div>
+            </section>
+            <section class="card">
+              <h2>服務類型分布</h2>
+              <div id="serviceBars"></div>
+            </section>
+            <section class="card">
+              <h2>班級追蹤摘要</h2>
+              <div id="classReport"></div>
+            </section>
+          </div>
+          <section class="card" style="margin-top:18px;">
+            <div class="section-title">
+              <h2 style="margin:0;">管理者視角：近期提醒與待辦</h2>
+              <span class="muted">避免行政只收資料、不支持教學</span>
+            </div>
+            <table class="table">
+              <thead>
+                <tr><th>項目</th><th>目前狀態</th><th>建議行動</th></tr>
+              </thead>
+              <tbody id="adminTodo"></tbody>
+            </table>
+          </section>
+        </section>
+
+        <div class="footer-note">本畫面為口試展示版：以匿名化資料模擬中山女高校內融合教育支持平台。正式導入時可再串接校內單一登入、資料庫、權限審核與訊息推播機制。</div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const db = {
+      classes: {
+        "一年智班": [
+          {
+            id: "S101",
+            name: "A同學",
+            grade: "一年智班",
+            category: "身體病弱",
+            confidentiality: "L2 教學支援級",
+            risk: "中度支持",
+            summary: "整體認知與學科表現穩定，但體力與如廁安排需彈性，體育與大型活動需適度調整。",
+            needs: ["體育活動彈性調整", "如廁時間彈性", "避免過度曝曬與高強度活動"],
+            strengths: ["人際互動自然", "可主動表達需求", "一般課程理解無明顯困難"],
+            strategies: ["課前先告知活動流程", "允許暫時離席處理身體需求", "體育評量改以安全參與與個人完成度為主"],
+            reminders: ["不在班上公開討論個人醫療細節", "體育課以低調支持為原則"],
+            assessment: ["體育項目彈性評量", "必要時調整出缺勤與補評方式"],
+            iepContent: ["以原班課程為主，活動性內容依身體狀況彈性調整。"],
+            iepProcess: ["課程進行中保留暫停與回復節奏的彈性。", "重要活動事先預告與說明。"],
+            iepEnvironment: ["可使用較方便進出的座位與友善如廁動線。", "避免長時間曝曬或高強度競技情境。"],
+            iepAssessment: ["體育與班級活動採替代或調整後評量。", "定期評量原則上維持一般標準，必要時彈性處理。"]
+          },
+          {
+            id: "S102",
+            name: "B同學",
+            grade: "一年智班",
+            category: "低視力",
+            confidentiality: "L2 教學支援級",
+            risk: "中高支持",
+            summary: "學業理解佳，但視覺輸入速度較慢，需放大字體、良好照明與操作性課程安全支持。",
+            needs: ["放大字體試卷", "延長作答時間", "操作性課程提供協同支持"],
+            strengths: ["理解力佳", "口語表達自然", "學習動機高"],
+            strategies: ["提供電子檔或放大講義", "板書與投影片兼採口頭說明", "安排前排且照明適中的座位"],
+            reminders: ["避免使用低對比板書", "動態課程需放慢示範並注意安全"],
+            assessment: ["放大試卷、延長時間、必要時代謄答案卡", "圖像題可附文字敘述"],
+            iepContent: ["原班課程為主，不因障礙降低課程核心目標。"],
+            iepProcess: ["教材需轉換為放大、電子檔或口述補充。", "作業可酌採口頭、報告等多元方式呈現。"],
+            iepEnvironment: ["座位以前排、視線佳、照明穩定位置為主。", "樓梯與高低差區域加強辨識。"],
+            iepAssessment: ["放大試卷、延長時間、少量協助性報讀。", "精細操作課程可改替代表現方式。"]
+          }
+        ],
+        "一年樂班": [
+          {
+            id: "S201",
+            name: "C同學",
+            grade: "一年樂班",
+            category: "自閉症",
+            confidentiality: "L2 教學支援級",
+            risk: "中高支持",
+            summary: "理解力與記憶力佳，對興趣主題投入高，但分組、人際解讀與情緒彈性較弱，需結構化與預告。",
+            needs: ["分組前預告", "具體任務分工", "少人試場或安靜考場"],
+            strengths: ["記憶力佳", "語文或特定主題表現突出", "願意與師長溝通"],
+            strategies: ["以視覺化方式提示流程", "分組時先安排友善同儕", "任務說明要具體，不用暗示語句"],
+            reminders: ["臨時改變規則時需先說明", "情緒升高時先降刺激再談要求"],
+            assessment: ["獨立或少人考場", "作業形式與份量可彈性調整"],
+            iepContent: ["原班課程為主，社會技巧與情緒因應以外加支持補充。", "抽象或隱含訊息需明示說明。"],
+            iepProcess: ["多媒體、組織圖、關鍵句型協助理解。", "合作任務需指定角色與可完成工作。"],
+            iepEnvironment: ["座位安排於兩側或友善同儕附近。", "提供可暫時冷靜的支持空間。"],
+            iepAssessment: ["考場可調整為少人或獨立試場。", "作業可調整份量、內容與表現形式。"]
+          },
+          {
+            id: "S202",
+            name: "D同學",
+            grade: "一年樂班",
+            category: "自閉症（高功能）",
+            confidentiality: "L2 教學支援級",
+            risk: "中度支持",
+            summary: "學業能力佳、自我要求高，對變動、規則不一致與大量抄寫較敏感，需要預告與明確規範。",
+            needs: ["課程變動預告", "減少無意義大量抄寫", "焦慮時可短暫離開情境"],
+            strengths: ["理解力佳", "數理表現佳", "做事認真且記憶好"],
+            strategies: ["提早告知活動更動", "把評量與作業要求講清楚", "不把情緒支持誤當放寬標準"],
+            reminders: ["公平與標準不一致時容易卡住", "表面平靜不代表壓力不高"],
+            assessment: ["原則維持一般標準，但保留情境與形式彈性", "期中考前後加強追蹤"],
+            iepContent: ["原班課程為主，必要時補充社會技巧與壓力因應。"],
+            iepProcess: ["先預告再執行，降低不確定感。", "避免以大量抄寫作為主要練習方式。"],
+            iepEnvironment: ["安排友善同儕與可冷靜空間。", "新情境需有緩衝與說明。"],
+            iepAssessment: ["維持一般學術期待，但可就時程與方式做彈性。", "重要考試前提供明確流程提醒。"]
+          }
+        ],
+        "一年群班": [
+          {
+            id: "S301",
+            name: "E同學",
+            grade: "一年群班",
+            category: "自閉症伴注意力與情緒調節困難",
+            confidentiality: "L2 教學支援級",
+            risk: "高需求關注",
+            summary: "智力與學習基礎可跟上，但注意力維持短、分組與情緒調節困難，遇壓力時可能哭泣或發聲。",
+            needs: ["具體任務切分", "分組協助", "突發情況時可到資源教室冷靜"],
+            strengths: ["願意表達想法", "有音樂與語言興趣", "對熟悉任務投入度高"],
+            strategies: ["用多媒體與具體操作協助理解", "任務主題可由老師先限縮", "焦慮時先協助降壓再處理作業"],
+            reminders: ["不要在群體前持續追問情緒", "小考與作業常需結構化提醒"],
+            assessment: ["獨立考場", "作業與評量份量彈性調整"],
+            iepContent: ["數學等較抽象科目可視需求做簡化或減量。", "社會技巧與定期晤談為重要支持。"],
+            iepProcess: ["透過視覺化、操作化與具體說明降低理解負荷。", "允許拍照記錄作業與上課重點。"],
+            iepEnvironment: ["安排在兩側與友善同儕附近。", "提供資源教室作為突發情緒支持空間。"],
+            iepAssessment: ["獨立或少人試場。", "作業份量、內容與形式可依狀況調整。"]
+          }
+        ],
+        "三年樂班": [
+          {
+            id: "S401",
+            name: "F同學",
+            grade: "三年樂班",
+            category: "聽覺障礙",
+            confidentiality: "L2 教學支援級",
+            risk: "中度支持",
+            summary: "整體學習能力良好，但聽覺訊息接收受限，需視覺線索、前排座位、FM 系統與分組討論支持。",
+            needs: ["前排座位", "FM 系統與視覺提示", "英聽與特定科目評量彈性調整"],
+            strengths: ["學習動機高", "願意說明需求", "閱讀與理解力佳"],
+            strategies: ["老師說明時面向學生、搭配板書", "小組討論提醒同學輪流發言", "重要訊息以文字再確認"],
+            reminders: ["噪音情境下接收困難會明顯增加", "身體疲勞與壓力可能影響課堂表現"],
+            assessment: ["英聽或聽覺依賴評量彈性調整", "必要時抽離考場與時間調整"],
+            iepContent: ["維持原班學習，聽覺負荷高的內容做彈性處理。"],
+            iepProcess: ["多媒體、板書、重點文字與讀唇友善教學。", "分組時同儕需協助轉述與確認分工。"],
+            iepEnvironment: ["座位以前 2-3 排、面向講台位置為主。", "安排友善同學協助提醒廣播與重要事項。"],
+            iepAssessment: ["英聽可免計或另調整方式。", "特定科目可採抽離考場與配分調整。"]
+          }
+        ]
+      },
+      permissions: [
+        {
+          role: "科任教師",
+          can: "授課班級學生之 IEP 摘要、教學策略、評量調整、通知提醒",
+          cannot: "完整醫療史、完整鑑定報告、跨班個案敏感紀錄",
+          use: "上課前快速掌握支持方式"
+        },
+        {
+          role: "導師",
+          can: "本班完整摘要、班級支持策略、跨科通知、家長聯繫重點",
+          cannot: "其他班學生資料、非必要醫療細節",
+          use: "班級經營與跨科協調"
+        },
+        {
+          role: "特教教師",
+          can: "完整 IEP、服務紀錄、提問回覆、追蹤事項",
+          cannot: "無",
+          use: "個案管理與諮詢支持"
+        },
+        {
+          role: "特教組長",
+          can: "校內統計、服務趨勢、權限管理、重大個案追蹤",
+          cannot: "非必要私人訊息揭露",
+          use: "行政治理與資源配置"
+        },
+        {
+          role: "行政人員",
+          can: "統計報表、已核准的評量調整清單、通知清單",
+          cannot: "學生敏感敘述與完整個案內容",
+          use: "考場、獎補助、行政協調"
+        }
+      ],
+      privacy: [
+        { level: "L1 基本辨識級", desc: "班級、匿名代碼、需留意的課堂支持事項。", who: "科任教師可見", style: "ok" },
+        { level: "L2 教學支援級", desc: "障礙類別、學習影響、IEP 四大調整與評量提醒。", who: "導師、科任、特教教師可依權限見", style: "warn" },
+        { level: "L3 個案管理級", desc: "完整 IEP、晤談摘要、服務追蹤與跨專業討論紀錄。", who: "特教教師、特教組長", style: "danger" }
+      ],
+      notifications: [
+        { status: "待確認", tag: "定期評量", text: "距第一次段考 7 天：一年樂班有 2 位學生需啟用少人試場與作業／評量彈性調整。", time: "今天 08:10" },
+        { status: "已推播", tag: "IEP 更新", text: "三年樂班 F 同學之英聽調整摘要已更新，任課教師請重新確認。", time: "昨天 16:20" },
+        { status: "待回覆", tag: "教師提問", text: "一年群班 E 同學分組報告執行困難，已有任課教師提出諮詢。", time: "昨天 14:05" }
+      ],
+      logs: [
+        {
+          time: "2026/04/01 08:15",
+          className: "一年樂班",
+          student: "C同學",
+          type: "IEP課程調整執行",
+          content: "本週英文小考是否建議改為少人試場，並讓學生先看題型說明後再開始作答？",
+          by: "王老師",
+          reply: "建議依摘要啟用少人試場，並在考前先口頭與書面說明流程；若焦慮升高，可先到資源教室穩定後再應考。",
+          owner: "特教教師 陳老師"
+        },
+        {
+          time: "2026/03/31 15:40",
+          className: "三年樂班",
+          student: "F同學",
+          type: "作業 / 評量調整",
+          content: "下週分組口頭報告，是否需要再加強文字摘要與同儕轉述機制？",
+          by: "李老師",
+          reply: "建議同組同學先提供簡短文字稿，報告時提醒輪流發言；若使用 FM，請於發表前確認設備。",
+          owner: "聽障巡輔 / 特教教師"
+        }
+      ],
+      workflow: [
+        "教師登入後僅看到自己授課班級與必要摘要。",
+        "系統於評量前自動推播本班學生的評量調整方式。",
+        "若教師遇到執行疑問，可在同頁面直接提問。",
+        "特教教師回覆後，系統保留紀錄並可追蹤是否完成。",
+        "行政端只看統計與待辦，不必直接處理完整敏感個案資料。"
+      ]
+    };
+
+    let currentClass = "一年智班";
+    let currentTab = "home";
+
+    function getSelectedClasses() {
+      return [...document.getElementById('todayClasses').selectedOptions].map(o => o.value);
+    }
+
+    function flattenStudents(classes) {
+      return classes.flatMap(cls => (db.classes[cls] || []).map(s => ({...s, className: cls})));
+    }
+
+    function countRisk(students, keyword) {
+      return students.filter(s => s.risk.includes(keyword)).length;
+    }
+
+    function renderTabs() {
+      const tabs = [
+        ["home", "教師首頁"],
+        ["permission", "權限與保密"],
+        ["notice", "通知與提問"],
+        ["logs", "回覆紀錄"],
+        ["report", "行政報表"]
+      ];
+      document.getElementById('tabs').innerHTML = tabs.map(([id, label]) =>
+        `<button class="tab-btn ${currentTab===id?'active':''}" onclick="switchTab('${id}')">${label}</button>`
+      ).join('');
+      document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+      document.getElementById(`tab-${currentTab}`).classList.add('active');
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      renderTabs();
+    }
+
+    function renderStats() {
+      const selected = getSelectedClasses();
+      const students = flattenStudents(selected);
+      const teacher = document.getElementById('teacherName').value || '未命名教師';
+      const role = document.getElementById('teacherRole').value;
+      document.getElementById('teacherSummary').innerHTML = `
+        <span class="chip ok">${teacher}</span>
+        <span class="chip">${role}</span>
+        <span class="chip warn">今日 ${selected.length} 班</span>
+      `;
+      document.getElementById('stats').innerHTML = `
+        <div class="stat"><div class="muted">可存取班級</div><div class="n">${selected.length}</div></div>
+        <div class="stat"><div class="muted">需掌握學生</div><div class="n">${students.length}</div></div>
+        <div class="stat"><div class="muted">高關注學生</div><div class="n">${countRisk(students, '高')}</div></div>
+        <div class="stat"><div class="muted">已建 IEP 摘要</div><div class="n">${students.length}</div></div>
+        <div class="stat"><div class="muted">待回覆提問</div><div class="n">${db.logs.length}</div></div>
+        <div class="stat"><div class="muted">本週通知</div><div class="n">${db.notifications.length}</div></div>
+      `;
+    }
+
+    function renderClasses() {
+      const selected = getSelectedClasses();
+      if (!selected.includes(currentClass)) currentClass = selected[0] || "一年智班";
+      document.getElementById('classButtons').innerHTML = selected.map(cls => {
+        const count = (db.classes[cls] || []).length;
+        return `<button class="class-btn ${cls===currentClass?'active':''}" onclick="selectClass('${cls}')">
+          <div style="font-weight:900; font-size:17px;">${cls}</div>
+          <div class="muted">本班特教學生 ${count} 位</div>
+        </button>`;
+      }).join('');
+    }
+
+    function selectClass(cls) {
+      currentClass = cls;
+      renderClassDetail();
+      renderQuickIEP();
+      renderExamReminder();
+      renderClasses();
+      syncQuestionSelectors();
+    }
+
+    function renderClassDetail() {
+      const students = db.classes[currentClass] || [];
+      document.getElementById('classTitle').textContent = `${currentClass}｜班級學生資料`;
+      document.getElementById('classInfo').innerHTML = `
+        <span class="chip">特教學生 ${students.length} 位</span>
+        <span class="chip purple">權限內顯示 L1-L2 摘要</span>
+      `;
+      document.getElementById('studentList').innerHTML = students.map(s => `
+        <article class="student-item">
+          <header>
+            <div>
+              <div class="student-name">${s.name}</div>
+              <div class="student-meta">${s.category}・${s.risk}・${s.confidentiality}</div>
+            </div>
+            <div class="chips">
+              <span class="chip ${s.risk.includes('高') ? 'danger' : 'ok'}">${s.risk}</span>
+              <span class="chip warn">IEP摘要</span>
+            </div>
+          </header>
+          <div class="muted">${s.summary}</div>
+          <div class="student-grid">
+            <div class="mini-box"><h4>需求重點</h4><ul>${s.needs.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+            <div class="mini-box"><h4>優勢</h4><ul>${s.strengths.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+            <div class="mini-box"><h4>教師可立即採用</h4><ul>${s.strategies.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+            <div class="mini-box"><h4>教學提醒</h4><ul>${s.reminders.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+          </div>
+          <div class="iep-band">
+            <h4>IEP 四大調整</h4>
+            <div class="student-grid wide">
+              <div class="mini-box"><h4>學習內容調整</h4><ul>${s.iepContent.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+              <div class="mini-box"><h4>學習歷程調整</h4><ul>${s.iepProcess.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+              <div class="mini-box"><h4>學習環境調整</h4><ul>${s.iepEnvironment.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+              <div class="mini-box"><h4>學習評量調整</h4><ul>${s.iepAssessment.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function renderQuickIEP() {
+      const students = db.classes[currentClass] || [];
+      document.getElementById('iepQuickView').innerHTML = students.map(s => `
+        <div class="log">
+          <div style="font-weight:900;">${s.name}｜${s.category}</div>
+          <div class="small muted" style="margin:4px 0 8px;">授課前建議先讀這三件事</div>
+          <ul>
+            <li>${s.strategies[0]}</li>
+            <li>${s.reminders[0]}</li>
+            <li>${s.iepAssessment[0]}</li>
+          </ul>
+        </div>
+      `).join('');
+    }
+
+    function renderExamReminder() {
+      const students = db.classes[currentClass] || [];
+      document.getElementById('examReminderPanel').innerHTML = students.map(s => `
+        <div class="log">
+          <div style="font-weight:900;">${s.name}</div>
+          <div>${s.assessment[0]}</div>
+          <div class="muted small" style="margin-top:6px;">系統提醒：段考前 7 天、3 天與前 1 天，自動推播給授課教師與導師。</div>
+        </div>
+      `).join('');
+    }
+
+    function renderPermissions() {
+      document.getElementById('permissionMatrix').innerHTML = db.permissions.map(p => `
+        <tr>
+          <td><strong>${p.role}</strong></td>
+          <td>${p.can}</td>
+          <td>${p.cannot}</td>
+          <td>${p.use}</td>
+        </tr>
+      `).join('');
+      document.getElementById('privacyLevels').innerHTML = db.privacy.map(p => `
+        <div class="log" style="border-left-color:${p.style==='danger'?'#ef4444':p.style==='warn'?'#f59e0b':'#14b8a6'};">
+          <div style="font-weight:900;">${p.level}</div>
+          <div>${p.desc}</div>
+          <div class="muted small" style="margin-top:4px;">可見對象：${p.who}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderNotifications() {
+      document.getElementById('notificationList').innerHTML = db.notifications.map(n => `
+        <div class="log">
+          <div class="chips" style="margin-bottom:6px;">
+            <span class="chip ${n.status.includes('待') ? 'warn' : 'ok'}">${n.status}</span>
+            <span class="chip purple">${n.tag}</span>
+          </div>
+          <div>${n.text}</div>
+          <div class="muted small" style="margin-top:6px;">${n.time}</div>
+        </div>
+      `).join('');
+    }
+
+    function syncQuestionSelectors() {
+      const selected = getSelectedClasses();
+      const classSelect = document.getElementById('questionClass');
+      classSelect.innerHTML = selected.map(c => `<option ${c===currentClass?'selected':''}>${c}</option>`).join('');
+      populateStudentsForQuestion();
+    }
+
+    function populateStudentsForQuestion() {
+      const className = document.getElementById('questionClass').value;
+      const students = db.classes[className] || [];
+      document.getElementById('questionStudent').innerHTML = students.map(s => `<option>${s.name}</option>`).join('');
+    }
+
+    function submitQuestion() {
+      const teacher = document.getElementById('teacherName').value || '未命名教師';
+      const className = document.getElementById('questionClass').value;
+      const student = document.getElementById('questionStudent').value;
+      const type = document.getElementById('questionType').value;
+      const text = document.getElementById('questionText').value.trim();
+      if (!text) { alert('請先輸入提問內容。'); return; }
+      const now = new Date();
+      const time = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      db.logs.unshift({
+        time, className, student, type, content: text, by: teacher,
+        reply: '已收到提問，系統已通知特教教師。建議先依目前 IEP 摘要執行，必要時由特教教師進一步入班支持。',
+        owner: '特教系統自動回覆'
+      });
+      document.getElementById('questionText').value = '';
+      document.getElementById('submitBanner').style.display = 'block';
+      renderLogs();
+      renderReports();
+      renderStats();
+      setTimeout(() => document.getElementById('submitBanner').style.display = 'none', 2600);
+    }
+
+    function fillSampleQuestion() {
+      document.getElementById('questionType').value = '作業 / 評量調整';
+      document.getElementById('questionText').value = '第一次段考前，想確認本班學生的試場安排、延長時間與作業份量調整是否已完成通知。';
+    }
+
+    function renderLogs() {
+      document.getElementById('responseLogs').innerHTML = db.logs.map(log => `
+        <div class="log">
+          <div style="font-weight:900;">${log.className}｜${log.student}｜${log.type}</div>
+          <div style="margin:4px 0 8px;">教師提問：${log.content}</div>
+          <div style="background:#fff; border:1px solid #dbeafe; border-radius:10px; padding:10px;">
+            <div style="font-weight:800; color:#1d4ed8;">特教端回覆</div>
+            <div>${log.reply}</div>
+            <div class="muted small" style="margin-top:6px;">${log.owner}</div>
+          </div>
+          <div class="muted small" style="margin-top:8px;">${log.time}・回報教師：${log.by}</div>
+        </div>
+      `).join('');
+      document.getElementById('workflowSteps').innerHTML = db.workflow.map((step, idx) => `
+        <div class="log"><div style="font-weight:900;">步驟 ${idx+1}</div><div>${step}</div></div>
+      `).join('');
+    }
+
+    function renderReports() {
+      const selected = getSelectedClasses();
+      const students = flattenStudents(selected);
+      const categoryCount = {};
+      students.forEach(s => { categoryCount[s.category] = (categoryCount[s.category] || 0) + 1; });
+      document.getElementById('kpiSummary').innerHTML = `
+        <div><strong>本週校內摘要</strong></div>
+        <div class="muted" style="margin-top:8px;">可存取班級 ${selected.length} 班，需追蹤學生 ${students.length} 位，提問 ${db.logs.length} 筆，通知 ${db.notifications.length} 則。</div>
+        <div class="muted" style="margin-top:8px;">展示意義：行政端掌握趨勢，特教端追蹤服務，教師端只看到可執行資訊。</div>
+      `;
+      document.getElementById('serviceBars').innerHTML = Object.entries(categoryCount).map(([label, count]) => {
+        const pct = Math.round((count / students.length) * 100);
+        return `
+          <div class="bar-row">
+            <div class="label"><span>${label}</span><span>${count} 位</span></div>
+            <div class="bar"><span style="width:${pct}%"></span></div>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('classReport').innerHTML = selected.map(cls => `
+        <div class="log">
+          <div style="font-weight:900;">${cls}</div>
+          <div>${(db.classes[cls] || []).length} 位學生已建立 IEP 摘要與評量提醒。</div>
+        </div>
+      `).join('');
+      document.getElementById('adminTodo').innerHTML = `
+        <tr><td>第一次段考提醒</td><td>進行中</td><td>確認少人試場、放大試卷、獨立考場等調整是否送達任課教師。</td></tr>
+        <tr><td>教師提問回覆率</td><td>${db.logs.length} 筆已收案</td><td>統一於特教端 24 小時內完成回覆，必要時安排入班支持。</td></tr>
+        <tr><td>個資與保密檢核</td><td>正常</td><td>持續以匿名代碼與分級揭露原則維護資料安全。</td></tr>
+      `;
+    }
+
+    function renderAll() {
+      renderTabs();
+      renderStats();
+      renderClasses();
+      renderClassDetail();
+      renderQuickIEP();
+      renderExamReminder();
+      renderPermissions();
+      renderNotifications();
+      syncQuestionSelectors();
+      renderLogs();
+      renderReports();
+    }
+
+    function loadDemo() {
+      document.getElementById('teacherName').value = '王老師';
+      document.getElementById('teacherRole').value = '科任教師';
+      [...document.getElementById('todayClasses').options].forEach(o => {
+        o.selected = ['一年智班','一年樂班','一年群班','三年樂班'].includes(o.value);
+      });
+      currentClass = '一年智班';
+      currentTab = 'home';
+      renderAll();
+    }
+
+    document.getElementById('questionClass').addEventListener('change', populateStudentsForQuestion);
+    loadDemo();
+  </script>
+</body>
+</html>
