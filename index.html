@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>中山女高融合教育支持平台｜李秀真考生口試展示版</title>
+  <title>中山女高融合教育支持平台｜口試展示版</title>
   <style>
     :root {
       --bg: #f4f7fb;
@@ -159,7 +159,7 @@
         <div class="hero-note small">
           <div><strong>展示定位：</strong>高擬真上線原型</div>
           <div>資料已匿名化、去識別化</div>
-          <div>麻煩委員可以現場掃 QR code 以了解合教育示範概念</div>
+          <div>適合口試現場掃 QR code 展示概念</div>
         </div>
       </div>
     </section>
@@ -200,7 +200,7 @@
 
         <hr style="border:none; border-top:1px solid #e5e7eb; margin:18px 0;">
 
-        <h3>口試欲展示概念</h3>
+        <h3>口試亮點</h3>
         <ul class="muted small">
           <li>帳號權限分級，不同身分看到不同資訊深度</li>
           <li>學生資料保密分級，降低不必要揭露</li>
@@ -217,7 +217,7 @@
 
         <section class="tab-panel active" id="tab-home">
           <div class="two-col">
-            <div>
+            <div id="homeRightCol">
               <section class="card" style="margin-bottom:18px;">
                 <div class="section-title">
                   <h2 style="margin:0;">教師首頁</h2>
@@ -846,6 +846,45 @@
       renderTabs();
     }
 
+
+    function applyRolePreset() {
+      const role = getRole();
+      const options = [...document.getElementById('todayClasses').options];
+
+      if (role === '導師') {
+        options.forEach(o => {
+          o.selected = (o.value === '三年樂班');
+        });
+        currentClass = '三年樂班';
+      } else if (role === '科任教師') {
+        const allowed = ['一年智班','一年樂班','一年群班','三年樂班'];
+        options.forEach(o => {
+          o.selected = allowed.includes(o.value);
+        });
+        if (!allowed.includes(currentClass)) currentClass = '一年智班';
+      } else if (role === '行政人員') {
+        const allowed = ['一年智班','一年樂班','一年群班','三年樂班'];
+        options.forEach(o => {
+          o.selected = allowed.includes(o.value);
+        });
+        if (!allowed.includes(currentClass)) currentClass = '一年智班';
+      } else {
+        const allowed = ['一年智班','一年樂班','一年群班','三年樂班'];
+        options.forEach(o => {
+          o.selected = allowed.includes(o.value);
+        });
+        if (!allowed.includes(currentClass)) currentClass = '一年智班';
+      }
+    }
+
+    function applyRoleBasedLayout() {
+      const role = getRole();
+      const rightCol = document.getElementById('homeRightCol');
+      if (rightCol) {
+        rightCol.style.display = role === '科任教師' ? 'none' : 'block';
+      }
+    }
+
     function renderStats() {
       const selected = getSelectedClasses();
       const students = flattenStudents(selected);
@@ -1087,14 +1126,16 @@
     function loadDemo() {
       document.getElementById('teacherName').value = '王老師';
       document.getElementById('teacherRole').value = '科任教師';
-      [...document.getElementById('todayClasses').options].forEach(o => {
-        o.selected = ['一年智班','一年樂班','一年群班','三年樂班'].includes(o.value);
-      });
       currentClass = '一年智班';
       currentTab = 'home';
+      applyRolePreset();
       renderAll();
     }
 
+    document.getElementById('teacherRole').addEventListener('change', () => {
+      applyRolePreset();
+      renderAll();
+    });
     document.getElementById('questionClass').addEventListener('change', populateStudentsForQuestion);
     loadDemo();
   </script>
