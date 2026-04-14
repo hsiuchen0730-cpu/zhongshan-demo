@@ -1,2 +1,2 @@
-# zhongshan-demo
+# MingLun-demo
 Special education support system demo
